@@ -21,6 +21,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Tooltip from "@material-ui/core/Tooltip";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import EditIcon from '@material-ui/icons/Edit';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -33,48 +35,57 @@ const useStyles = makeStyles((theme) => ({
     description: {
         height: '100%'
     },
-    bookButton:{
-        paddingRight:'10px'
+    bookButton: {
+        paddingRight: '10px'
     },
-    bookPrice:{
-        paddingLeft:'10px'
+    bookPrice: {
+        paddingLeft: '10px'
     },
     imageStyle: {
         width: 40,
         height: 40,
-        marginRight:'10px'
+        marginRight: '10px'
 
     },
     avatar: {
         width: 100,
         height: 100,
     },
-
+    link: {
+        margin: 10,
+        marginTop: 10
+    }
 
 }));
 
 
-export default function OfferCard(props){
+export default function OfferCard(props) {
     const classes = useStyles();
     const [profile, setProfile] = useState({})
     const [image, setImage] = useState({})
-    useEffect( () => {    // Update the profile value on mount
-        const fetchdata = async () =>
-        {
+    useEffect(() => {    // Update the profile value on mount
+        const fetchdata = async () => {
             const newprof = await ProfileService.getProfile(props.owner)
             setProfile(newprof)
         }
-        switch(props.game)
-        {
-            case 'LoL': setImage(LoL);break;
-            case 'DotA 2': setImage(Dota);break;
-            case 'CS:GO': setImage(CSGO);break;
-            default: setImage(Search);break;
+        switch (props.game) {
+            case 'LoL':
+                setImage(LoL);
+                break;
+            case 'DotA 2':
+                setImage(Dota);
+                break;
+            case 'CS:GO':
+                setImage(CSGO);
+                break;
+            default:
+                setImage(Search);
+                break;
         }
 
         fetchdata()
 
-    },[]);
+    }, []);
     const displayVerifiedIcon = () => {
         if (profile.usertype === "professional") {
             return (
@@ -88,17 +99,21 @@ export default function OfferCard(props){
         }
     }
 
+
     return (
         <MuiThemeProvider theme={theme}>
             <Card classes={{root: classes.root}} className="OfferCard" key={props.key}>
+                <Link className={classes.link}  to={`/offer/edit/${props.id}`}>
+                    <EditIcon/>
+                </Link>
                 <CardActionArea className={classes.description}>
                     <CardContent align="center">
-                            <Avatar
-                                className="profilePicture"
-                                alt={profile.username}
-                                title={profile.username}
-                                src={profile.profileImage}
-                            />
+                        <Avatar
+                            className="profilePicture"
+                            alt={profile.username}
+                            title={profile.username}
+                            src={profile.profileImage}
+                        />
 
                         <Typography variant="h5" component="h5" color={'inherit'}>
                             {profile.username}
@@ -114,10 +129,10 @@ export default function OfferCard(props){
                             justify="center"
                             alignItems="center"
                         >
-                                <CardMedia src={image} component="img" className={classes.imageStyle}/>
-                                <Typography variant="h4" component="h4">
-                                    {props.game}
-                                </Typography>
+                            <CardMedia src={image} component="img" className={classes.imageStyle}/>
+                            <Typography variant="h4" component="h4">
+                                {props.game}
+                            </Typography>
                         </Grid>
                     </CardContent>
                     <Divider variant="middle"/>
@@ -138,15 +153,15 @@ export default function OfferCard(props){
                         </Grid>
 
                         <Grid className={classes.bookButton}
-                            container
-                            direction="column"
-                            justify="flex-end"
-                            alignItems="flex-end"
+                              container
+                              direction="column"
+                              justify="flex-end"
+                              alignItems="flex-end"
                         >
-                        <Button variant="contained" color="primary" >
-                            Book
-                        </Button>
-                            </Grid>
+                            <Button variant="contained" color="primary">
+                                Book
+                            </Button>
+                        </Grid>
                     </CardActions>
                 </CardActionArea>
             </Card>
